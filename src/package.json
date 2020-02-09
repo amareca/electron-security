@@ -1,5 +1,5 @@
 {
-  "name": "electron-first-app",
+  "name": "electron-security",
   "version": "1.0.0-SNAPSHOT",
   "description": "An App for learning",
   "main": "main.js",
@@ -10,7 +10,7 @@
     "rebuild": "electron-rebuild -f -w sqlite3"
   },
   "author": "Ag3nte",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "electron": "^7.1.9",
     "electron-rebuild": "^1.10.0",
@@ -32,6 +32,7 @@
     "sqlite3": "^4.1.1"
   },
   "_moduleAliases": {
+    "@preload": "/engine/preload.js", 
     "@components": "./engine/components.js", 
     "@app": "./app"
   },

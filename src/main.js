@@ -14,7 +14,7 @@ const defaultProps = {
     height: 800,
     webPreferences: {
       nodeIntegration: false,
-      preload: path.join(__dirname, '/engine/views.js')
+      preload: path.join(__dirname, '/engine/preload.js')
     }
 }
   
