@@ -4,4 +4,5 @@ dist/
 
 # dependencies
 node_modules/
+db/storage.db
 

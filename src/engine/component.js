@@ -1,6 +1,6 @@
 const { Engine } = require('./engine.js')
 
-class BaseComponent extends HTMLElement {
+class Component extends HTMLElement {
     constructor () {
         super()
         this.render()
@@ -17,4 +17,4 @@ class BaseComponent extends HTMLElement {
 
     }
 }
-module.exports = { BaseComponent} ;
+module.exports = { Component} ;

@@ -2,9 +2,9 @@
 require('electron-reload')(__dirname);
 
 const { app, BrowserWindow, ipcMain , Menu, Tray, shell} = require('electron')
-const sqlite3 = require('sqlite3').verbose();
+// const sqlite3 = require('sqlite3').verbose();
 const path = require('path')
-const dataBase = './db/storage.db'
+// const dataBase = './db/storage.db'
 
 const defaultProps = {
     backgroundColor : '#F6F8F8',
@@ -65,42 +65,44 @@ function main () {
     // shell.beep()
   });
   
-  try {
-    createDataBase()
-    createTableUsers()
-  } catch (error) {
-    console.log(error)
-  }
+  // try {
+  //   createDataBase()
+  //   createTableUsers()
+  // } catch (error) {
+  //   console.log(error)
+  // }
 }
 
 app.on('ready', main)
 
-function createDataBase() {
-  // open database in memory
-  let db = new sqlite3.Database(dataBase, sqlite3.CREATE, (err) => {
-    if (err) {
-      console.error(err.message);
-    }
-    console.log('Connected to the storage.');
-  });
+require('./db/manager.js')
 
-  // close the database connection
-  db.close((err) => {
-    if (err) {
-      return console.error(err.message);
-    }
-    console.log('Close the database connection.');
-  });
-}
+// function createDataBase() {
+//   // open database in memory
+//   let db = new sqlite3.Database(dataBase, sqlite3.CREATE, (err) => {
+//     if (err) {
+//       console.error(err.message);
+//     }
+//     console.log('Connected to the storage.');
+//   });
+
+//   // close the database connection
+//   db.close((err) => {
+//     if (err) {
+//       return console.error(err.message);
+//     }
+//     console.log('Close the database connection.');
+//   });
+// }
 
 
-function createTableUsers() {
-  const users = 'CREATE TABLE IF NOT EXISTS user (' +
-    'user_id INTEGER PRIMARY KEY,' +
-    'email TEXT NOT NULL,' +
-    'pass TEXT NOT NULL);';
+// function createTableUsers() {
+//   const users = 'CREATE TABLE IF NOT EXISTS user (' +
+//     'user_id INTEGER PRIMARY KEY,' +
+//     'email TEXT NOT NULL,' +
+//     'pass TEXT NOT NULL);';
 
-  let db = new sqlite3.Database(dataBase);
-  db.run(users);
-  db.close();
-}
+//   let db = new sqlite3.Database(dataBase);
+//   db.run(users);
+//   db.close();
+// }

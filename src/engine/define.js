@@ -1,3 +1,4 @@
+//Define new components
 
 const components = [
     ['app-root', require('@app/app-component.js').AppComponent],

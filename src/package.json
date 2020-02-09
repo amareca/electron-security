@@ -32,9 +32,9 @@
     "sqlite3": "^4.1.1"
   },
   "_moduleAliases": {
-    "@preload": "/engine/preload.js", 
-    "@components": "./engine/components.js", 
-    "@app": "./app"
+    "@component": "./engine/component.js",
+    "@app": "./app",
+    "@db": "./db"
   },
   "keywords": []
 }

@@ -1,6 +1,6 @@
-const { BaseComponent } = require('@components')
+const { Component } = require('@component')
 
-class ViewComponent extends BaseComponent {
+class ViewComponent extends Component {
     constructor () {
         super()  
     }
