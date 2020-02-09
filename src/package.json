@@ -32,7 +32,8 @@
     "sqlite3": "^4.1.1"
   },
   "_moduleAliases": {
-    "@components": "./engine/components.js"
+    "@components": "./engine/components.js", 
+    "@app": "./app"
   },
   "keywords": []
 }
