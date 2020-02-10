@@ -1,51 +1,6 @@
 .container {
-    text-align: center;
     height: 100%;
     width: 100%;
     background: #23252F;
     color:#9FEAF9;
-    /* box-shadow: 10px 10px 29px 0px rgba(0,0,0,0.75); */
-}
-
-input {
-    padding: 5px;
-    float: right;
-    color: white;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    border-bottom: 1px solid #9FEAF9;
-    background-color: rgba(255, 255, 255, 0);
-}
-
-input[type="password"] {
-    letter-spacing: 3px;
-}
-
-input:focus{
-    outline: none;
-}
-
-#username, #password {
-    height: 20px;
-    width: 300px;
-    padding: 25px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 12px;
-    margin-bottom: 12px;
-    background-color: #2F3241;
-    /* box-shadow: 10px 10px 29px 0px rgba(0,0,0,0.75); */
-}
-
-#btn-login {
-    height: 20px;
-    width: 300px;
-    padding: 25px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 12px;
-    margin-bottom: 12px;
-    background-color: #2F3241;
-    /* box-shadow: 10px 10px 29px 0px rgba(0,0,0,0.75); */
 }
