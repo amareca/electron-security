@@ -7,6 +7,7 @@ const components = [
     ['login-component', require('@app/view/login/login-component.js').LoginComponent],
     ['accounts-component', require('@app/view/accounts/accounts-component.js').AccountsComponent],
     ['search-bar-component', require('@app/view/accounts/search-bar/search-bar-component.js').SearchBarComponent],
+    ['list-accounts-component', require('@app/view/accounts/list-accounts/list-accounts-component.js').ListAccountsComponent]
 ]
 
 components.forEach(c => {
