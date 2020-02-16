@@ -71,38 +71,16 @@ function main () {
   // } catch (error) {
   //   console.log(error)
   // }
+
+  let SQLiteDatabase = require('./db/manager.js').SQLiteDatabase
+
+  try {
+    let db = new SQLiteDatabase()
+    db.buildNew()
+    db.createTableUsers()
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 app.on('ready', main)
-
-require('./db/manager.js')
-
-// function createDataBase() {
-//   // open database in memory
-//   let db = new sqlite3.Database(dataBase, sqlite3.CREATE, (err) => {
-//     if (err) {
-//       console.error(err.message);
-//     }
-//     console.log('Connected to the storage.');
-//   });
-
-//   // close the database connection
-//   db.close((err) => {
-//     if (err) {
-//       return console.error(err.message);
-//     }
-//     console.log('Close the database connection.');
-//   });
-// }
-
-
-// function createTableUsers() {
-//   const users = 'CREATE TABLE IF NOT EXISTS user (' +
-//     'user_id INTEGER PRIMARY KEY,' +
-//     'email TEXT NOT NULL,' +
-//     'pass TEXT NOT NULL);';
-
-//   let db = new sqlite3.Database(dataBase);
-//   db.run(users);
-//   db.close();
-// }

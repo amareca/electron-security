@@ -32,8 +32,7 @@
   },
   "_moduleAliases": {
     "@component": "./engine/component.js",
-    "@app": "./app",
-    "@db": "./db"
+    "@app": "./app"
   },
   "keywords": []
 }
