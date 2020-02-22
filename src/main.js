@@ -78,6 +78,7 @@ function main () {
     let db = new SQLiteDatabase()
     db.buildNew()
     db.createTableUsers()
+    // db.addUser()
   } catch (error) {
     console.log(error)
   }
