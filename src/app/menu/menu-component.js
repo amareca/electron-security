@@ -12,28 +12,25 @@ class MenuComponent extends Component {
     addEvents() {
         var ipcRenderer = require('electron').ipcRenderer;
         try {
-            const btnCerrar = this.shadowRoot.getElementById('btn-cerrar')
-            btnCerrar.addEventListener('click', function(){
-                //ipcRenderer.once('actionReply', function(event, response){
-                    //processResponse(response);
-                //})
-                ipcRenderer.send('invokeAction', 'someData');
+            const btnClose = this.shadowRoot.getElementById('btn-cerrar')
+            btnClose.addEventListener('click', () => {
+                ipcRenderer.send('invokeCloseWindow')
             });
             const btnMinimize = this.shadowRoot.getElementById('btn-minimize')
-            btnMinimize.addEventListener('click', function(){
+            btnMinimize.addEventListener('click', () => {
                 ipcRenderer.send('invokeMinimizeWindow', 'someData');
             });
             const btnMaximize = this.shadowRoot.getElementById('btn-maximize')
-            btnMaximize.addEventListener('click', function(){
+            btnMaximize.addEventListener('click', () => {
                 ipcRenderer.send('invokeMaximizeWindow', 'someData');
                 btnMaximize.firstElementChild.src = 'https://img.icons8.com/small/32/000000/restore-down.png'
             });
             const btnDevTools = this.shadowRoot.getElementById('btn-devTools')
-            btnDevTools.addEventListener('click', function(){
+            btnDevTools.addEventListener('click', () => {
                 ipcRenderer.send('invokeDevTools', 'someData');
             });
             const btnPruebas = this.shadowRoot.getElementById('btn-pruebas')
-            btnPruebas.addEventListener('click', function(){
+            btnPruebas.addEventListener('click', () => {
                 ipcRenderer.send('invokePruebas', 'someData');
             });
         } catch (error) {
