@@ -1,3 +1,22 @@
+const table_user = `CREATE TABLE IF NOT EXISTS user ( 
+    user_id INTEGER PRIMARY KEY, 
+    email TEXT NOT NULL,
+    password TEXT NOT NULL,
+    createdAt INT NOT NULL,
+    updatedAt INT NULL);`
+
+const table_account = `CREATE TABLE IF NOT EXISTS account ( 
+    account_id INTEGER PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    title TEXT NOT NULL, 
+    description TEXT NULL,
+    email TEXT NOT NULL,
+    password TEXT NOT NULL,
+    username TEXT NULL,
+    createdAt INT NOT NULL,
+    updatedAt INT NULL,
+    FOREIGN KEY (user_id)
+       REFERENCES user (user_id) );`
 
 const sqlite3 = require('sqlite3').verbose();
 const database = './db/storage.db'
@@ -5,57 +24,35 @@ const database = './db/storage.db'
 class SQLiteDatabase {
     constructor(){}
     
-    buildNew() {
+    create() {
         let db = new sqlite3.Database(database, sqlite3.CREATE, (err) => {
             if (err) {
                 console.error(err.message);
             }
-            console.log('Connected to the storage.');
+            console.log('Created storage.');
         });
-
-        db.close((err) => {
-            if (err) {
-                return console.error(err.message);
-            }
-            console.log('Close the database connection.');
-        });
-    }
-
-    createTableUsers() {
-        const user = `CREATE TABLE IF NOT EXISTS user ( 
-            user_id INTEGER PRIMARY KEY, 
-            email TEXT NOT NULL,
-            pass TEXT NOT NULL,
-            createdAt INT NOT NULL,
-            updatedAt INT NULL);`
-
-        let db = new sqlite3.Database(database);
-        db.run(user);
         db.close();
     }
 
-    addUser() {
-        const user = `INSERT INTO user (email,pass)
-        VALUES('Paco', '1234abc');`
-
-        let db = new sqlite3.Database(database);
-        db.run(user , (err) => {
-            if (err) {
-                return console.error(err.message);
+    init() {
+        this.createTables()
+    }
+    createTables() {
+        let tables = [table_user, table_account]
+        tables.forEach(t => {
+            try {
+                let db = new sqlite3.Database(database, sqlite3.CREATE);
+                db.run(t)
+                db.close()
+            } catch (e) {
+                console.log(e)
             }
-            console.log('Close the database connection.');
-        });
-        
-        db.close((err) => {
-            if (err) {
-                return console.error(err.message);
-            }
-            console.log('Close the database connection.');
-        });
+        })
     }
 }
+module.exports = { SQLiteDatabase }
 
-const join = (arr, separator = ',', end = separator) =>
+const joinWithSeparator = (arr, separator = ',', end = separator) =>
     arr.reduce(
         (acc, val, i) =>
             i === arr.length - 2
@@ -71,8 +68,8 @@ class DAO {
         this.model = model
     }
     add(object) {
-        let columns = join(Object.keys(object));
-        let values = join(Object.values(object));
+        let columns = joinWithSeparator(Object.keys(object));
+        let values = joinWithSeparator(Object.values(object));
 
         const statement = `INSERT INTO ${this.model.tableName} (${columns},createdAt) VALUES(${values},datetime('now'));`
 
@@ -84,12 +81,9 @@ class DAO {
     }
 
     update(object) {
-
-
-
         //la id tiene que ser el primer property
-        let id = Object.keys(object)[0]
-        let value = Object.values(object)[0]
+        const id = Object.keys(object)[0]
+        const value = Object.values(object)[0]
 
         let values = ''
         Object.keys(object).slice(1).forEach((val) => {
@@ -116,7 +110,7 @@ class DAO {
     }
 }
 
-module.exports = { SQLiteDatabase };
+
 
 
 //DATOS DE CIFRADO
@@ -167,7 +161,7 @@ async function pruebaCifrado(){
 
 
 ////////////////////////////////////////////////
-pruebaCifrado()
+// pruebaCifrado()
 
 ///////////////descifrar///////////////////////
 

@@ -12,15 +12,12 @@ class MenuComponent extends Component {
     addEvents() {
         var ipcRenderer = require('electron').ipcRenderer;
         try {
-            const btnCerrar = this.shadowRoot.getElementById('btn-cerrar')
-            btnCerrar.addEventListener('click', function(){
-                //ipcRenderer.once('actionReply', function(event, response){
-                    //processResponse(response);
-                //})
-                ipcRenderer.send('invokeAction', 'someData');
+            const btnClose = this.shadowRoot.getElementById('btn-cerrar')
+            btnClose.addEventListener('click', () => {
+                ipcRenderer.send('invokeCloseWindow')
             });
             const btnMinimize = this.shadowRoot.getElementById('btn-minimize')
-            btnMinimize.addEventListener('click', function(){
+            btnMinimize.addEventListener('click', () => {
                 ipcRenderer.send('invokeMinimizeWindow', 'someData');
             });
             const btnMaximize = this.shadowRoot.getElementById('btn-maximize')
