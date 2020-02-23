@@ -21,16 +21,16 @@ class MenuComponent extends Component {
                 ipcRenderer.send('invokeMinimizeWindow', 'someData');
             });
             const btnMaximize = this.shadowRoot.getElementById('btn-maximize')
-            btnMaximize.addEventListener('click', function(){
+            btnMaximize.addEventListener('click', () => {
                 ipcRenderer.send('invokeMaximizeWindow', 'someData');
                 btnMaximize.firstElementChild.src = 'https://img.icons8.com/small/32/000000/restore-down.png'
             });
             const btnDevTools = this.shadowRoot.getElementById('btn-devTools')
-            btnDevTools.addEventListener('click', function(){
+            btnDevTools.addEventListener('click', () => {
                 ipcRenderer.send('invokeDevTools', 'someData');
             });
             const btnPruebas = this.shadowRoot.getElementById('btn-pruebas')
-            btnPruebas.addEventListener('click', function(){
+            btnPruebas.addEventListener('click', () => {
                 ipcRenderer.send('invokePruebas', 'someData');
             });
         } catch (error) {

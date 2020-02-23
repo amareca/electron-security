@@ -18,7 +18,7 @@ class LoginComponent extends Component {
                 let password = this.shadowRoot.querySelector('#form-password > input').value
                 console.log([email, password])
 
-                //Call to main.js then check data and calls DAO
+                //Call to main.js then check data and calls service
                 ipcRenderer.send('invokeLogin', [email, password]);
             });
         } catch (error) {

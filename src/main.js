@@ -1,56 +1,34 @@
-// Enable live reload for all the files inside your project directory
 require('electron-reload')(__dirname);
-
 const { app, BrowserWindow, ipcMain, Menu, Tray, shell } = require('electron')
-// const sqlite3 = require('sqlite3').verbose();
 const path = require('path')
-// const dataBase = './db/storage.db'
 
-const defaultProps = {
-  backgroundColor: '#F6F8F8',
-  show: true,
-  frame: false,
-  width: 1024,
-  height: 800,
-  webPreferences: {
-    nodeIntegration: false,
-    preload: path.join(__dirname, '/engine/preload.js')
-  }
-}
-
-class AppWindow extends BrowserWindow {
-  constructor() {
-    super({ ...defaultProps })
-    this.loadFile(__dirname + '/index.html')
-  }
-}
- 
-
+app.on('ready', main)
 //Funcion principal que se ejecuta nada mas lanzar la app
 function main() {
-  let win = new AppWindow()
+  let win = new BrowserWindow({
+    backgroundColor: '#F6F8F8',
+    show: true,
+    frame: false,
+    width: 1024,
+    height: 800,
+    webPreferences: {
+      nodeIntegration: false,
+      preload: path.join(__dirname, '/engine/preload.js')
+    }
+  })
+  win.loadFile(__dirname + '/index.html')
 
   let invokeMap = new Map([
-    ["invokeCloseWindow" ,() => {
-      win.close();
-    }],
-    ["invokeMinimizeWindow" ,() => {
-      win.minimize();
-    }],
-    ["invokeMaximizeWindow" ,() => {
-      win.isMaximized() ? win.unmaximize() : win.maximize();
-    }],
-    ["invokeDevTools" ,() => {
-      //var result = processData(data);
-      win.webContents.openDevTools();
-      //event.sender.send('actionReply', result);
-    }],
-    ["invokePruebas" ,() => {
+    ["invokeCloseWindow", () => win.close()],
+    ["invokeMinimizeWindow", () => win.minimize()],
+    ["invokeMaximizeWindow", () => win.isMaximized() ? win.unmaximize() : win.maximize()],
+    ["invokeDevTools", () => win.webContents.openDevTools()],
+    ["invokePruebas", () => {
       console.log('Has pulsado' + 'invokePruebas')
       console.log(shell.showItemInFolder(__dirname))
       // shell.beep()
     }],
-    ["invokeLogin" ,(event, data) => {
+    ["invokeLogin", (event, data) => {
       console.log('Has pulsado el boton Login: ' + data)
       //Calls to Service
       // let userService = new UserService()
@@ -60,14 +38,10 @@ function main() {
     }],
   ]);
 
-  invokeMap.forEach((v,k) => {
-    ipcMain.on(k,v)
+  invokeMap.forEach((v, k) => {
+    ipcMain.on(k, v)
   });
 }
-app.on('ready', main)
-
-
-
 
 
 ////////////////////////////////////////////////
