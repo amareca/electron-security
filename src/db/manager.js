@@ -1,6 +1,6 @@
 const table_user = `CREATE TABLE IF NOT EXISTS user ( 
     user_id INTEGER PRIMARY KEY, 
-    email TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     createdAt INT NOT NULL,
     updatedAt INT NULL);`
@@ -22,8 +22,6 @@ const sqlite3 = require('sqlite3').verbose();
 const database = './db/storage.db'
 
 class SQLiteDatabase {
-    constructor(){}
-    
     create() {
         let db = new sqlite3.Database(database, sqlite3.CREATE, (err) => {
             if (err) {
@@ -37,80 +35,102 @@ class SQLiteDatabase {
     init() {
         this.createTables()
     }
+
     createTables() {
-        let tables = [table_user, table_account]
+        let tables = [table_user, table_account];
         tables.forEach(t => {
             try {
                 let db = new sqlite3.Database(database, sqlite3.CREATE);
-                db.run(t)
-                db.close()
+                db.run(t);
+                db.close();
             } catch (e) {
-                console.log(e)
+                console.error(e);
             }
-        })
+        });
     }
 }
-module.exports = { SQLiteDatabase }
-
-const joinWithSeparator = (arr, separator = ',', end = separator) =>
-    arr.reduce(
-        (acc, val, i) =>
-            i === arr.length - 2
-                ? acc + val + end
-                : i === arr.length - 1
-                    ? acc + val
-                    : acc + val + separator,
-        ''
-    );
 
 class DAO {
     constructor(model) {
-        this.model = model
+        this.model = model;
     }
+
     add(object) {
-        let columns = joinWithSeparator(Object.keys(object));
-        let values = joinWithSeparator(Object.values(object));
+        return new Promise((resolve, reject) => {
+            const columns = Object.keys(object).join(',');
+            const values = Object.values(object);
+            const placeHolders = values.map((v) => '?').join(',');
 
-        const statement = `INSERT INTO ${this.model.tableName} (${columns},createdAt) VALUES(${values},datetime('now'));`
+            const statement = `INSERT INTO ${this.model.tableName} (${columns},createdAt) VALUES(${placeHolders},datetime('now'));`;
+            console.log(statement);
 
-        console.log(statement)
-
-        let db = new sqlite3.Database(database);
-        db.run(statement);
-        db.close();
+            let db = new sqlite3.Database(database);
+            db.run(statement, Object.values(object), function (err) {
+                if (err) {
+                    reject(err.message);
+                }
+                resolve(this.changes);
+            });
+            db.close();
+        }).catch((err) => {
+            console.error(err);
+            return -1;
+        });
     }
 
     update(object) {
-        //la id tiene que ser el primer property
-        const id = Object.keys(object)[0]
-        const value = Object.values(object)[0]
+        //ID property first
+        const id = Object.keys(object)[0];
+        const value = Object.values(object)[0];
 
-        let values = ''
-        Object.keys(object).slice(1).forEach((val) => {
-            values +=  `${val} = ${object[val]},`
-        });
-        values = values.slice(0,-1);
+        let values = '';
+        Object.keys(object).slice(1).forEach((val) => values += `${val} = ${object[val]},`);
+        values = values.slice(0, -1);
 
-        const statement = `UPDATE ${this.model.tableName} SET ${values}, updatedAt = datetime('now') WHERE ${id} = ${value};`
-
-        console.log(statement)
+        const statement = `UPDATE ${this.model.tableName} SET ${values}, updatedAt = datetime('now') WHERE ${id} = ${value};`;
+        console.log(statement);
 
         let db = new sqlite3.Database(database);
         db.run(statement);
         db.close();
     }
-    delete() {
 
+    delete(object) {
+        return new Promise((resolve, reject) => {
+            //ID property first
+            const id = Object.keys(object)[0];
+            const value = Object.values(object)[0];
+
+            const statement = `DELETE FROM ${this.model.tableName} WHERE ${id} = ${value};`;
+
+            let db = new sqlite3.Database(database);
+            db.run(statement);
+            db.close();
+        });
     }
-    get() {
 
-    }
-    getAll() {
+    get(object) {
+        return new Promise((resolve, reject) => {
+            let values = '';
+            Object.keys(object).forEach((val) => values += `${val} = ${object[val]} AND `);
+            values = values.slice(0, -4);
 
+            const columns = Object.keys(object).join(',');
+
+            const statement = `SELECT ${columns} FROM ${this.model.tableName} WHERE ${values};`;
+            console.log(statement);
+
+            let db = new sqlite3.Database(database);
+            db.all(statement, (err, rows) => {
+                console.log(rows);
+                resolve(rows);
+                db.close();
+            });
+        });
     }
 }
 
-
+module.exports = { DAO, SQLiteDatabase };
 
 
 //DATOS DE CIFRADO
@@ -132,8 +152,8 @@ const iv = Buffer.alloc(16, 0); // Initialization vector.
 ////////////////////////////////////
 
 /////////// CIFRAR ////////////////
-async function cipherString(string) {
-    return await new Promise((resolve) => {
+function cipherString(string) {
+    return new Promise((resolve) => {
         const cipher = crypto.createCipheriv(algorithm, key, iv);
         let encrypted = '';
         cipher.on('readable', () => {
@@ -142,16 +162,14 @@ async function cipherString(string) {
                 encrypted += chunk.toString('hex');
             }
         });
-        cipher.on('end', () => {
-            resolve(encrypted)
-        });
+        cipher.on('end', () => resolve(encrypted));
         cipher.write(string);
         cipher.end();
     });
 }
 
-async function pruebaCifrado(){
-    let a = await cipherString('paco@gmail.com')
+async function pruebaCifrado() {
+    let a = await cipherString('prueba')
     console.log('Codigo cifrado: ' + a)
 
     let b = await decipherString(a)
@@ -165,8 +183,8 @@ async function pruebaCifrado(){
 
 ///////////////descifrar///////////////////////
 
-async function decipherString(string) {
-    return await new Promise((resolve) => {
+function decipherString(string) {
+    return new Promise((resolve) => {
         const decipher = crypto.createDecipheriv(algorithm, key, iv);
         let decrypted = '';
         decipher.on('readable', () => {
@@ -174,9 +192,7 @@ async function decipherString(string) {
                 decrypted += chunk.toString('utf8');
             }
         });
-        decipher.on('end', () => {
-            resolve(decrypted)
-        });
+        decipher.on('end', () => resolve(decrypted));
         decipher.write(string, 'hex');
         decipher.end();
     });
@@ -184,13 +200,18 @@ async function decipherString(string) {
 
 ////////////////////////////////////////////////
 
-let user = {
-    email: "'paco@gmail.com'",
-    pass: "'paco1234'"
+async function testAdd() {
+    let user = {
+        email: "paco@gmail.com",
+        password: "paco1234"
+    }
+    let userDao = new DAO({ tableName: 'user' })
+    console.log(userDao)
+    let result = await userDao.add(user);
+    console.log('El resultado de add : ' + result);
 }
-let userDao = new DAO({tableName : 'user'})
-console.log(userDao)
-// userDao.add(user)
+
+testAdd();
 
 let updateUser = {
     user_id: 1,

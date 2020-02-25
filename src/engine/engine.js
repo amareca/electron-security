@@ -7,9 +7,8 @@ let files, html, css
 class Engine {
 
     //Devuelve un array con los ficheros del componente (nombre-component.html, .css, .js)
-    static async getComponentFiles(path) {
-        console.log(path)
-        const result = await new Promise((resolve, reject) => {
+    static getComponentFiles(path) {
+        return new Promise((resolve, reject) => {
             fs.readdir(path, (err, files) => {
                 if (err) {
                     reject(Error(err))
@@ -17,18 +16,16 @@ class Engine {
                 resolve(files);
             });
         });
-        return result
     }
     
-    static async getComponent(files, type) {
-        const result = await new Promise((resolve, reject) => {
+    static getComponent(files, type) {
+        return new Promise((resolve, reject) => {
             files.forEach(f => {
                 if (f.match(new RegExp("-component." + type))) {
                     resolve('/' + f)
                 }
             });
         });
-        return result
     }
 
     static async setFileComponents(component) {
