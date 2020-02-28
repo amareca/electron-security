@@ -5,24 +5,58 @@ class UserService {
         this.DAO = new DAO({ tableName: 'user' });
     }
 
-    add(object) {
+    async add(object) {
+        let result;
+        try {
+            result = await userDao.add(user);
+        } catch (err) {
+            console.error(err.error);
+            result = err.result;
+        }
         return this.DAO.add(object);
     }
 
-    update(object) {
-        return this.DAO.update(object);
+    async update(object) {
+        let result;
+        try {
+            result = await this.DAO.update(object);
+        } catch (err) {
+            console.error(err.error);
+            result = err.result;
+        }
+        return result;
     }
 
-    get(object) {
-        return this.DAO.get(object);
+    async get(object) {
+        let result;
+        try {
+            result = await this.DAO.get(object);
+        } catch (err) {
+            console.error(err.error);
+            result = err.result;
+        }
+        return result;
     }
 
-    delete(object) {
-
+    async delete(object) {
+        let result;
+        try {
+            result = await this.DAO.delete(object);
+        } catch (err) {
+            console.error(err.error);
+            result = err.result;
+        }
+        return result;
     }
 
     async exists(object) {
-        let user = await this.DAO.get(object);
+        let user;
+        try {
+            user = await this.DAO.get(object);
+        } catch (err) {
+            console.error(err.error);
+            user = err.result;
+        }
         return Array.isArray(user) && user.length > 0; 
     }
 }

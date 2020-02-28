@@ -3,7 +3,7 @@ const table_user = `CREATE TABLE IF NOT EXISTS user (
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     createdAt INT NOT NULL,
-    updatedAt INT NULL);`
+    updatedAt INT NULL);`;
 
 const table_account = `CREATE TABLE IF NOT EXISTS account ( 
     account_id INTEGER PRIMARY KEY,
@@ -16,10 +16,10 @@ const table_account = `CREATE TABLE IF NOT EXISTS account (
     createdAt INT NOT NULL,
     updatedAt INT NULL,
     FOREIGN KEY (user_id)
-       REFERENCES user (user_id) );`
+       REFERENCES user (user_id) );`;
 
 const sqlite3 = require('sqlite3').verbose();
-const database = './db/storage.db'
+const database = './db/storage.db';
 
 class SQLiteDatabase {
     create() {
@@ -33,7 +33,7 @@ class SQLiteDatabase {
     }
 
     init() {
-        this.createTables()
+        this.createTables();
     }
 
     createTables() {
@@ -50,13 +50,35 @@ class SQLiteDatabase {
     }
 }
 
+/**
+ * This class has methods to connect with database.
+ */
 class DAO {
     constructor(model) {
         this.model = model;
     }
 
+    // checkType(object) {
+    //     return Object.keys(object).some( (v) => {
+    //         return !this.model.props.includes(v);
+    //     });;
+    // }
+
+    /**
+     * INSERT operation
+     * 
+     * @param {Object} object - Object which you will insert into database.
+     * @return {Promise} the resulting operation
+     */
     add(object) {
         return new Promise((resolve, reject) => {
+            // if (this.checkType(object)) {
+            //     reject({
+            //         error: "Error: Bad type",
+            //         result: -1
+            //     });
+            // }
+
             const columns = Object.keys(object).join(',');
             const values = Object.values(object);
             const placeHolders = values.map((v) => '?').join(',');
@@ -65,67 +87,89 @@ class DAO {
             console.log(statement);
 
             let db = new sqlite3.Database(database);
-            db.run(statement, Object.values(object), function (err) {
+            db.run(statement, values, function (err) {
                 if (err) {
-                    reject(err.message);
+                    reject({
+                        error: err,
+                        result: -1
+                    });
                 }
                 resolve(this.changes);
             });
             db.close();
-        }).catch((err) => {
-            console.error(err);
-            return -1;
         });
     }
 
     update(object) {
-        //ID property first
-        const id = Object.keys(object)[0];
-        const value = Object.values(object)[0];
+        return new Promise((resolve, reject) => {
+            const keys = Object.keys(object.keys);
+            const placeHolderKeys = keys.map((v) => ` ${v} = ? `).join(',');
 
-        let values = '';
-        Object.keys(object).slice(1).forEach((val) => values += `${val} = ${object[val]},`);
-        values = values.slice(0, -1);
+            const props = Object.keys(object.props);
+            const placeHolderProps = props.map((v) => ` ${v} = ? `).join(' AND ');
 
-        const statement = `UPDATE ${this.model.tableName} SET ${values}, updatedAt = datetime('now') WHERE ${id} = ${value};`;
-        console.log(statement);
-
-        let db = new sqlite3.Database(database);
-        db.run(statement);
-        db.close();
+            const statement = `UPDATE ${this.model.tableName} SET ${placeHolderProps}, updatedAt = datetime('now') WHERE ${placeHolderKeys};`;
+            console.log(statement);
+            
+            const values = Object.values(object.props).concat(Object.values(object.keys));
+            let db = new sqlite3.Database(database);
+            db.run(statement, values, function (err) {
+                if (err) {
+                    reject({
+                        error: err,
+                        result: -1
+                    });
+                }
+                resolve(this.changes);
+            });
+            db.close();
+        });
     }
 
     delete(object) {
         return new Promise((resolve, reject) => {
-            //ID property first
-            const id = Object.keys(object)[0];
-            const value = Object.values(object)[0];
+            const keys = Object.keys(object);
+            const placeHolderKeys = keys.map((v) => ` ${v} = ? `).join(' AND ');
 
-            const statement = `DELETE FROM ${this.model.tableName} WHERE ${id} = ${value};`;
+            const statement = `DELETE FROM ${this.model.tableName} WHERE ${placeHolderKeys};`;
+            console.log(statement);
 
             let db = new sqlite3.Database(database);
-            db.run(statement);
+            db.run(statement, Object.values(object), function (err) {
+                if (err) {
+                    reject({
+                        error: err,
+                        result: -1
+                    });
+                }
+                resolve(this.changes);
+            });
             db.close();
         });
     }
 
     get(object) {
         return new Promise((resolve, reject) => {
-            let values = '';
-            Object.keys(object).forEach((val) => values += `${val} = ${object[val]} AND `);
-            values = values.slice(0, -4);
+            const values = Object.keys(object);
+            const placeHolders = values.map((v) => ` ${v} = ? `).join(' AND ');
 
             const columns = Object.keys(object).join(',');
 
-            const statement = `SELECT ${columns} FROM ${this.model.tableName} WHERE ${values};`;
+            const statement = `SELECT ${columns} FROM ${this.model.tableName} WHERE ${placeHolders};`;
             console.log(statement);
 
             let db = new sqlite3.Database(database);
-            db.all(statement, (err, rows) => {
+            db.all(statement, Object.values(object), function(err, rows) {
+                if (err) {
+                    reject({
+                        error: err,
+                        result: -1
+                    });
+                }
                 console.log(rows);
                 resolve(rows);
-                db.close();
             });
+            db.close();
         });
     }
 }
@@ -201,21 +245,66 @@ function decipherString(string) {
 ////////////////////////////////////////////////
 
 async function testAdd() {
+    let userDao = new DAO({
+        tableName: 'user',
+        props: ["user_id", "email", "password"]
+    });
     let user = {
         email: "paco@gmail.com",
         password: "paco1234"
+    };
+    
+    let result;
+    try {
+        result = await userDao.add(user);
+    } catch (err) {
+        console.error(err.error);
+        result = err.result;
     }
-    let userDao = new DAO({ tableName: 'user' })
-    console.log(userDao)
-    let result = await userDao.add(user);
     console.log('El resultado de add : ' + result);
 }
 
-testAdd();
-
-let updateUser = {
-    user_id: 1,
-    email: "'pepon@gmail.com'"
+async function testUpdate() {
+    let userDao = new DAO({
+        tableName: 'user',
+        props: ["user_id", "email", "password"]
+    });
+    let user = {
+        keys: {
+            user_id: "1"
+        },
+        props: {
+            email: "paco@gmail.com",
+        }
+    };
+    let result;
+    try {
+        result = await userDao.update(user);
+    } catch (err) {
+        console.error('Ha dado error : ' + err.error);
+        result = err.result;
+    }
+    console.log('El resultado de update : ' + result);
 }
 
-// userDao.update(updateUser)
+async function testDelete() {
+    let userDao = new DAO({
+        tableName: 'user',
+        props: ["user_id", "email", "password"]
+    });
+    let user = {
+        user_id: "1"
+    };
+    let result;
+    try {
+        result = await userDao.delete(user);
+    } catch (err) {
+        console.error('Ha dado error : ' + err.error);
+        result = err.result;
+    }
+    console.log('El resultado de borrar : ' + result);
+}
+
+// testAdd();
+// testUpdate();
+// testDelete();

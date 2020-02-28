@@ -29,12 +29,12 @@ class Engine {
     }
 
     static async setFileComponents(component) {
-        files = await this.getComponentFiles(component.path)
-        html = fs.readFileSync(path.join(component.path, await this.getComponent(files , 'html')), 'utf8')
-        css = '<style>' + fs.readFileSync(path.join(component.path, await this.getComponent(files, 'css')), 'utf8') + '</style>'
-        template.innerHTML = css + html
+        files = await this.getComponentFiles(component.path);
+        html = fs.readFileSync(path.join(component.path, await this.getComponent(files , 'html')), 'utf8');
+        css = '<style>' + fs.readFileSync(path.join(component.path, await this.getComponent(files, 'css')), 'utf8') + '</style>';
+        template.innerHTML = css + html;
     
-        component.attachShadow({mode: 'open'})
+        component.attachShadow({mode: 'open'});
         component.shadowRoot.appendChild(template.content.cloneNode(true));
     }
 } 

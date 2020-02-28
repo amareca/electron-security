@@ -1,19 +1,19 @@
-const { Engine } = require('./engine.js')
+const { Engine } = require('./engine.js');
 
 class Component extends HTMLElement {
     constructor () {
-        super()
-        this.render()
+        super();
+        this.render();
     }
 
     init(){}
 
     async render() {
-        this.init()
+        this.init();
 
-        await Engine.setFileComponents(this)
+        await Engine.setFileComponents(this);
         
-        this.addEvents()
+        this.addEvents();
 
     }
 }
