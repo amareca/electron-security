@@ -2,7 +2,7 @@
 
 *Electron-Security* lets you secure your sensitive data.
 
-**Author** -> Ag3nte
+**Author** -> [amareca](https://github.com/amareca)
 
 ### **Resources:**
 
