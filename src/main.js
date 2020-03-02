@@ -1,8 +1,9 @@
-require('electron-reload')(__dirname)
-require('module-alias/register')
-const { app, BrowserWindow, ipcMain, Menu, Tray, shell } = require('electron')
-const path = require('path')
-const { SQLiteDatabase } = require('./db/manager.js')
+require('electron-reload')(__dirname);
+require('module-alias/register');
+const { app, BrowserWindow, ipcMain, Menu, Tray, shell } = require('electron');
+const path = require('path');
+const { SQLiteDatabase } = require('./db/manager.js');
+const { UserService } = require('@services/user-service.js');
 
 app.on('ready', main)
 //Funcion principal que se ejecuta nada mas lanzar la app
@@ -30,23 +31,20 @@ function main() {
       console.log(shell.showItemInFolder(__dirname))
       // shell.beep()
     }],
-    ["invokeLogin", async (event, data) => {
-      console.log('Has pulsado el boton Login: ' + data)
-      //Calls to Service
-      const { UserService } = require('@services/user-service.js')
+    ["invokeLogin", (event, data) => {
       let userService = new UserService();
-      let user = {
-        email: "paco@gmail.com",
-        password: "paco1234"
-      }
-      let u = await userService.get(user);
-      console.log('El resultado es : ' + u[0].email);
+      userService.exists(data).then((exists) => {
+        if (exists) {
+          //Existe, por tanto accede a la app
 
-      // userService.add(user)
-      // let userService = new UserService()
-      // if (userService.existsByEmailAndPassword()) {
-      //   //Sends signal to components
-      // }
+        } else {
+          throw new Error('User doesn\'t exist');
+        }
+      }).catch((e) => {
+        //No se encuentra el usuario, se devuelve un error al usuario
+        console.error(e.message);
+      });
+
     }],
   ]);
 

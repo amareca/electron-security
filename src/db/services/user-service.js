@@ -2,51 +2,26 @@ const { DAO } = require('@manager');
 
 class UserService {
     constructor() {
-        this.DAO = new DAO({ tableName: 'user' });
+        this.DAO = new DAO({
+            tableName: 'user',
+            props: ["user_id", "email", "password"]
+        });
     }
 
-    async add(object) {
-        let result;
-        try {
-            result = await userDao.add(user);
-        } catch (err) {
-            console.error(err.error);
-            result = err.result;
-        }
+    add(object) {
         return this.DAO.add(object);
     }
 
-    async update(object) {
-        let result;
-        try {
-            result = await this.DAO.update(object);
-        } catch (err) {
-            console.error(err.error);
-            result = err.result;
-        }
-        return result;
+    update(object) {
+        return this.DAO.update(object);
     }
 
-    async get(object) {
-        let result;
-        try {
-            result = await this.DAO.get(object);
-        } catch (err) {
-            console.error(err.error);
-            result = err.result;
-        }
-        return result;
+    get(object) {
+        return this.DAO.get(object);
     }
 
-    async delete(object) {
-        let result;
-        try {
-            result = await this.DAO.delete(object);
-        } catch (err) {
-            console.error(err.error);
-            result = err.result;
-        }
-        return result;
+    delete(object) {
+        return this.DAO.delete(object);
     }
 
     async exists(object) {
@@ -54,8 +29,8 @@ class UserService {
         try {
             user = await this.DAO.get(object);
         } catch (err) {
-            console.error(err.error);
-            user = err.result;
+            console.error(err.message);
+            user = err.message;
         }
         return Array.isArray(user) && user.length > 0; 
     }

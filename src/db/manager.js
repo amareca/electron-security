@@ -58,9 +58,9 @@ class DAO {
         this.model = model;
     }
 
-    // checkType(object) {
-    //     return Object.keys(object).some( (v) => {
-    //         return !this.model.props.includes(v);
+    // checkType(object, props) {
+    //     return Object.keys(object).some((v) => {
+    //         return !props.includes(v);
     //     });;
     // }
 
@@ -72,13 +72,6 @@ class DAO {
      */
     add(object) {
         return new Promise((resolve, reject) => {
-            // if (this.checkType(object)) {
-            //     reject({
-            //         error: "Error: Bad type",
-            //         result: -1
-            //     });
-            // }
-
             const columns = Object.keys(object).join(',');
             const values = Object.values(object);
             const placeHolders = values.map((v) => '?').join(',');
@@ -90,7 +83,7 @@ class DAO {
             db.run(statement, values, function (err) {
                 if (err) {
                     reject({
-                        error: err,
+                        message: err,
                         result: -1
                     });
                 }
@@ -103,10 +96,10 @@ class DAO {
     update(object) {
         return new Promise((resolve, reject) => {
             const keys = Object.keys(object.keys);
-            const placeHolderKeys = keys.map((v) => ` ${v} = ? `).join(',');
+            const placeHolderKeys = keys.map((v) => ` ${v} = ? `).join(' AND ');
 
             const props = Object.keys(object.props);
-            const placeHolderProps = props.map((v) => ` ${v} = ? `).join(' AND ');
+            const placeHolderProps = props.map((v) => ` ${v} = ? `).join(',');
 
             const statement = `UPDATE ${this.model.tableName} SET ${placeHolderProps}, updatedAt = datetime('now') WHERE ${placeHolderKeys};`;
             console.log(statement);
@@ -116,7 +109,7 @@ class DAO {
             db.run(statement, values, function (err) {
                 if (err) {
                     reject({
-                        error: err,
+                        message: err,
                         result: -1
                     });
                 }
@@ -138,7 +131,7 @@ class DAO {
             db.run(statement, Object.values(object), function (err) {
                 if (err) {
                     reject({
-                        error: err,
+                        message: err,
                         result: -1
                     });
                 }
@@ -162,7 +155,7 @@ class DAO {
             db.all(statement, Object.values(object), function(err, rows) {
                 if (err) {
                     reject({
-                        error: err,
+                        message: err,
                         result: -1
                     });
                 }

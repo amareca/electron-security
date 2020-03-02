@@ -14,12 +14,14 @@ class LoginComponent extends Component {
         try {
             const btnLogin = this.shadowRoot.querySelector('#btn-login')
             btnLogin.addEventListener('click', () => {
-                let email = this.shadowRoot.querySelector('#form-email > input').value
-                let password = this.shadowRoot.querySelector('#form-password > input').value
-                console.log([email, password])
+                let user = {
+                    email: this.shadowRoot.querySelector('#form-email > input').value,
+                    password: this.shadowRoot.querySelector('#form-password > input').value
+                };
+                console.log(user);
 
                 //Call to main.js then check data and calls service
-                ipcRenderer.send('invokeLogin', [email, password]);
+                ipcRenderer.send('invokeLogin', user);
             });
         } catch (error) {
             console.log(error)
