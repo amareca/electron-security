@@ -36,15 +36,16 @@ function main() {
       userService.exists(data).then((exists) => {
         if (exists) {
           //Existe, por tanto accede a la app
-
+          event.returnValue = exists;
         } else {
           throw new Error('User doesn\'t exist');
         }
+        // event.reply('replyLogin', exists);
       }).catch((e) => {
         //No se encuentra el usuario, se devuelve un error al usuario
         console.error(e.message);
+        event.returnValue = false;
       });
-
     }],
   ]);
 

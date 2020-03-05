@@ -1,22 +1,33 @@
 <div class="container">
-    <img id="logo" src=".\resources\images\electron-security_200x200.png" alt="Electron Pass Managuer" height="200" width="200">
-    <div id="form-email">
-        <span>Email</span>
-        <input type="text" name="email" placeholder="john@gmail.com...">
-    </div>
-    <div id="form-password">
-        <span>Password</span>
-        <input type="password" name="password" placeholder="**********">
-    </div>
-    <!-- <div id="form-confirm-password">
-        <span>Confirm Password</span>
-        <input type="password" name="password" placeholder="**********">
-    </div> -->
-    <div id="form-forgot">
-        <span>Forgot password?</span>
-        <span>Create Account</span>
-    </div>
-    <div id="btn-login">
-        LOGIN
+    <div class="form-box">
+        <img class="logo" src=".\resources\images\electron-security_200x200.png" alt="Electron Pass Managuer" height="200" wclassth="200">
+        <div class="form-input-box form-header">
+            <h3>Sign-in</h3>
+        </div>
+        <div class="form-input-box form-email">
+            <label>Email</label>
+            <input type="text" name="email" value="paco@gmail.com" placeholder="john@gmail.com...">
+            <div class="form-alert"></div>
+        </div>
+        <div class="form-input-box form-password">
+            <span>Password</span>
+            <input type="password" name="password" value="paco1234" placeholder="**********">
+            <div class="form-alert"></div>
+        </div>
+        <div class="form-input-box form-confirm-password" style="display: none;">
+            <span>Confirm Password</span>
+            <input type="password" name="password" placeholder="**********">
+            <div class="form-alert"></div>
+        </div>
+        <div class="form-input-box form-footer">
+            <button class="btn-action" action="S">Continue</button>
+            <div class="form-alert"></div>
+            <p id="form-signin">
+                Already have an account? Sign in
+            </p>
+            <p id="form-forgot-password">
+                Forgot password?
+            </p>
+        </div>
     </div>
 </div>

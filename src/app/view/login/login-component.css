@@ -1,49 +1,33 @@
 
-.container {
-    background-color: blueviolet;
-    grid: initial;
-    display: grid;
-    width: 55%;
-    height: 55%;
-    grid-template-columns: 50% 50%;
-    grid-template-rows: auto auto auto auto auto auto;
-    grid-template-areas: 
-    "header header"
-    "input input"
-    "input2 input2"
-    "input3 input3"
-    "btn btn"
-    "footer footer";
-    align-content: center;	
+/* .container {
+    height: 50%;
+    width: 50%;
+} */
+
+
+.form-box .form-input-box {
+    display: flex;
+    flex-direction: column; 
 }
 
-#logo {
-    justify-self: center;
-    align-self: center;
-    grid-area: header;
+.form-box {
+    align-items: center;
 }
-#form-email {
-    justify-self: center;
-    align-self: center;
-    grid-area: input;
+
+button {
+    border: none;
+    background-color: #9FEAF9;
 }
-#form-password {
-    justify-self: center;
-    align-self: center;
-    grid-area: input2;
+
+#form-signin:hover {
+    color: white;
 }
-#form-confirm-password {
-    justify-self: center;
-    align-self: center;
-    grid-area: input3;
+
+#form-forgot-password:hover {
+    color: white;
 }
-#form-forgot {
-    justify-self: center;
-    align-self: center;
-    grid-area: btn;
-}
-#btn-login {
-    justify-self: center;
-    align-self: center;
-    grid-area: footer;
-}
+
+/* .form-input-box {
+    align-self: stretch;
+} */
+
