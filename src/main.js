@@ -3,7 +3,7 @@ require('module-alias/register');
 const { app, BrowserWindow, ipcMain, Menu, Tray, shell } = require('electron');
 const path = require('path');
 const { SQLiteDatabase } = require('./db/manager.js');
-const { UserService } = require('@services/user-service.js');
+//const { UserService } = require('@services/user-service.js');
 
 app.on('ready', main)
 //Funcion principal que se ejecuta nada mas lanzar la app
@@ -16,7 +16,8 @@ function main() {
     height: 800,
     webPreferences: {
       nodeIntegration: false,
-      preload: path.join(__dirname, '/engine/preload.js')
+      preload: path.resolve(`${__dirname}/../src/engine/preload.js`)
+      // preload: path.join(__dirname, '/engine/preload.js')
     }
   });
   win.loadFile(__dirname + '/index.html');
@@ -47,17 +48,28 @@ function main() {
         event.returnValue = false;
       });
     }],
+    ["invokeAccounts", (event, data) => {
+      //Hay que crear un componente accounts-component y agregarlo al container del shadowRoot del view-component
+      // win.webContents.executeJavaScript(`
+      // const { AccountsComponent} = require('@app/view/accounts/accounts-component.js').AccountsComponent;
+      // let accs = new AccountsComponent();
+      // let view =  document.getElementsByTagName("view-component");
+      // view.shadowRoot.appendChild(accs);
+      // `);
+      // let view =  document.getElementsByTagName("view-component");
+      // view.shadowRoot.appendChild(accs);
+    }],
   ]);
 
   invokeMap.forEach((v, k) => ipcMain.on(k, v));
-
-  try {
-    let db = new SQLiteDatabase();
-    db.create();
-    db.init();
-  } catch (error) {
-    console.log(error);
-  }
+  win.webContents.openDevTools();
+  // try {
+  //   let db = new SQLiteDatabase();
+  //   db.create();
+  //   db.init();
+  // } catch (error) {
+  //   console.log(error);
+  // }
 }
 
 

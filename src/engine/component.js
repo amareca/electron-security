@@ -18,5 +18,9 @@ class Component extends HTMLElement {
         }
 
     }
+
+    destroy() {
+        this.parentNode.removeChild(this);
+    }
 }
 module.exports = { Component} ;

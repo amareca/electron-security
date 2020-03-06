@@ -24,9 +24,10 @@ class LoginComponent extends Component {
                 //2. Comprobamos si existe el usuario
                 const exists = ipcRenderer.sendSync('invokeLogin', this.getSignInData());
                 if (exists) {
-                    //Entra en la app
-                    this.style.display = "none";
-                    this.parentElement.lastElementChild.style.display = "flex";
+                    // ipcRenderer.send('invokeAccounts'); //invocara en el main las acciones para inicializar el componente accounts-component
+                    let accs = document.createElement("accounts-component");
+                    this.parentNode.appendChild(accs);
+                    this.destroy(); //esto borrara el componente
                 } else {
                     this.shadowRoot.querySelector('.form-footer > .form-alert').innerHTML = 'No existe ese usuario.';
                 }
@@ -43,7 +44,8 @@ class LoginComponent extends Component {
                 if (exists) {
                     this.shadowRoot.querySelector('.form-footer > .form-alert').innerHTML = 'Ya existe ese usuario.';
                 } else {
-
+                    //Entra en la app (se envia una señal)
+                    ipcRenderer.send('invokeAccounts'); //invocara en el main las acciones para inicializar el componente accounts-component
                 }
             }
         });
