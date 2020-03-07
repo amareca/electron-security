@@ -10,12 +10,10 @@ class Component extends HTMLElement {
 
     async render() {
         this.init();
-        try {
-            await Engine.setFileComponents(this);
-            this.addEvents();
-        } catch (error) {
-            console.error(error);
-        }
+
+        await Engine.setFileComponents(this);
+        
+        this.addEvents();
 
     }
 
