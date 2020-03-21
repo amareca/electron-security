@@ -7,6 +7,7 @@
 ### **Resources:**
 
 * [Electron.js](https://www.electronjs.org/)
+* [React](https://reactjs.org/)
 * [SQLite](https://www.sqlite.org/)
 
 *MIT License*

@@ -1,0 +1,53 @@
+
+.LoginForm {
+    position: absolute;
+    width: 400px;
+    padding: 14px 18px;
+    /* border: 2px solid #9FEAF9;
+    border-radius: 4px; */
+    margin: auto;
+    top: 10%;
+    right: 0;
+    left: 0;
+}
+
+.form-input-box {
+    display: flex;
+    flex-direction: column;
+}
+.form-input-box input {
+    margin-top: 5px;
+    margin-bottom: 15px;
+    padding: 15px;
+
+    background-color: rgba(0, 0, 0, 0);
+    border: 1px solid #9FEAF9;
+    border-radius: 1px;
+    color: whitesmoke
+}
+
+.form-alert {
+    color:red;
+}
+
+.btn-action {
+    margin: auto;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    padding: 12px;
+    width: 100%;
+
+    background-color: #9FEAF9;
+    font-size: 1.00em;
+    color: #2B2E3B;
+    border: none;
+}
+
+.btn-action:hover {
+    background-color: rgb(129, 189, 201);
+}
+
+.btn-action:focus {
+    outline:none; 
+    text-decoration:none;
+}

@@ -1,0 +1,53 @@
+.Menu {
+    /* box-shadow: 10px 10px 29px 0px rgba(0,0,0,0.75); */
+    background-color: #2F3241;
+    -webkit-app-region: drag;
+    display: grid;
+    grid-template-columns:  5% 20% 50% 25%;
+}
+
+.topmenu {
+    -webkit-app-region: drag;
+    z-index: 0;
+    display: flex;
+    flex-direction: row;
+    flex-flow: row wrap;
+    list-style-type: none;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    padding-inline-start: 0px;
+}
+
+ul.app-buttons  {
+    justify-content: flex-start;
+}
+
+ul.window-buttons  {
+    justify-content: flex-end;
+}
+
+
+
+img {
+    filter: invert(80%) sepia(15%) saturate(3311%) hue-rotate(179deg) brightness(116%) contrast(106%);
+    height: 25px;
+}
+
+li {
+    z-index: 1;
+    -webkit-app-region: no-drag;
+    padding : 8px;
+}
+
+.item:hover {
+    background-color:  rgb(61, 65, 85);
+}
+
+#btn-cerrar:hover {
+    background-color: rgb(214, 51, 51);
+    filter: none;
+}
+
+#btn-cerrar > img:hover {
+    filter: invert(100%) sepia(0%) saturate(7461%) hue-rotate(183deg) brightness(98%) contrast(95%);
+}
